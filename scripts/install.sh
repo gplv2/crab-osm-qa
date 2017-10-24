@@ -90,28 +90,35 @@ function create_db_ini_file {
 }
 
 function prepare_source_data {
-    # downloading GRB data from CDN
-    echo "downloading data"
+    # downloading GRB data from private CDN or direct source
+    echo "downloading all source data"
     mkdir /usr/local/src/grb
     mkdir /datadisk2/out
     chown -R ${DEPLOY_USER}:${DEPLOY_USER} /usr/local/src/grb
     chown -R ${DEPLOY_USER}:${DEPLOY_USER} /datadisk2/out
 
     # wget seems to exhibit a bug in combination with running from terraform, quiet fixes that
-    # this is using my own mirror of the files as the download process with AGIV doesn't really work with automated downloads
-    su - ${DEPLOY_USER} -c "cd /usr/local/src/grb && wget --quiet http://debian.byte-consult.be/grb/GRBgis_10000B500.zip"
-    su - ${DEPLOY_USER} -c "cd /usr/local/src/grb && wget --quiet http://debian.byte-consult.be/grb/GRBgis_20001B500.zip"
-    su - ${DEPLOY_USER} -c "cd /usr/local/src/grb && wget --quiet http://debian.byte-consult.be/grb/GRBgis_30000B500.zip"
-    su - ${DEPLOY_USER} -c "cd /usr/local/src/grb && wget --quiet http://debian.byte-consult.be/grb/GRBgis_40000B500.zip"
-    su - ${DEPLOY_USER} -c "cd /usr/local/src/grb && wget --quiet http://debian.byte-consult.be/grb/GRBgis_70000B500.zip"
 
-    echo "extracting data"
-    # unpacking all provinces data
-    su - ${DEPLOY_USER} -c "cd /usr/local/src/grb && unzip GRBgis_10000B500.zip -d GRBgis_10000"
-    su - ${DEPLOY_USER} -c "cd /usr/local/src/grb && unzip GRBgis_20001B500.zip -d GRBgis_20001"
-    su - ${DEPLOY_USER} -c "cd /usr/local/src/grb && unzip GRBgis_30000B500.zip -d GRBgis_30000"
-    su - ${DEPLOY_USER} -c "cd /usr/local/src/grb && unzip GRBgis_40000B500.zip -d GRBgis_40000"
-    su - ${DEPLOY_USER} -c "cd /usr/local/src/grb && unzip GRBgis_70000B500.zip -d GRBgis_70000"
+    # download CRAB data from ... aiv
+    su - ${DEPLOY_USER} -c "cd /usr/local/src/grb && wget --quiet https://downloadagiv.blob.core.windows.net/crab-adressenlijst/Shapefile/CRAB_Adressenlijst.zip"
+    echo "extracting CRAB data"
+    # unpacking
+    su - ${DEPLOY_USER} -c "cd /usr/local/src/grb && unzip CRAB_Adressenlijst.zip -d CRAB"
+
+    # download wegenregister data from ... aiv
+    su - ${DEPLOY_USER} -c "cd /usr/local/src/grb && wget --quiet https://downloadagiv.blob.core.windows.net/wegenregister/Wegenregister_SHAPE_20170921.zip"
+
+    # download belgian OSM PBF - see http://download.geofabrik.de/europe/belgium.html
+    su - ${DEPLOY_USER} -c "cd /usr/local/src/grb && wget --quiet http://download.geofabrik.de/europe/belgium-latest.osm.pbf"
+
+    echo "extracting CRAB data"
+    # unpacking
+    su - ${DEPLOY_USER} -c "cd /usr/local/src/grb && unzip CRAB_Adressenlijst.zip -d CRAB"
+    # creates Shapefile/CrabAdr.shp
+
+    echo "extracting WR data"
+    # unpacking
+    su - ${DEPLOY_USER} -c "cd /usr/local/src/grb && unzip Wegenregister_SHAPE_20170921.zip -d WR"
 }
 
 # Create an aliases file so we can use short commands to navigate a project
@@ -481,7 +488,7 @@ fi
 
 # Build all GRB things, setup db, parse source dat and load into DB
 if [ "${RES_ARRAY[1]}" = "db" ]; then
-   install_grb_sources
+   #install_grb_sources
    create_bash_alias
    prepare_source_data
    install_tools
