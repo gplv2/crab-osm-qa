@@ -69,8 +69,33 @@ function install_tools {
     export PATH=$PATH:/usr/local/bin/ogr2osm
     # carto CSS for building our custom OSM DB
     cd /usr/local/src/ && git clone https://github.com/gravitystorm/openstreetmap-carto.git
+    # keep original we'll need it for the belgian pbf
+    cp /usr/local/src/openstreetmap-carto/openstreetmap-carto.style /usr/local/src/openstreetmap-carto/openstreetmap-carto-orig.style
     # copy modified style sheet (wonder if I still need the rest of the source of cartocss (seems to work like this)
     cp /tmp/openstreetmap-carto.style /usr/local/src/openstreetmap-carto/openstreetmap-carto.style
+}
+
+function install_tile_tools {
+    # using Jonathan Belien's installation guide (used for creating the public belgian tile server for OSM.be) 
+
+    # we need to prepare a partial tilesever setup so we can load belgium in a postGIS database , there might be some duplicate packages with the rest of this script
+    DEBIAN_FRONTEND=noninteractive apt-get install -qq -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confnew" -o Dpkg::Use-Pty=0 libboost-all-dev git-core tar unzip wget bzip2 build-essential autoconf libtool libgeos-dev libgeos++-dev libpq-dev libbz2-dev libproj-dev libprotobuf-c0-dev libxml2-dev protobuf-c-compiler libfreetype6-dev libpng12-dev libtiff5-dev libicu-dev libgdal-dev libcairo-dev libcairomm-1.0-dev apache2 apache2-dev libagg-dev liblua5.2-dev ttf-unifont liblua5.1-dev libgeotiff-epsg fonts-noto-cjk fonts-noto-hinted fonts-noto-unhinted python-yaml make cmake g++ libboost-dev libboost-system-dev libboost-filesystem-dev libexpat1-dev zlib1g-dev libbz2-dev libpq-dev liblua5.2-dev
+    # postgis is already present, so skip that step, but nodejs is not:
+
+    curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+
+    DEBIAN_FRONTEND=noninteractive apt-get install -qq -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confnew" -o Dpkg::Use-Pty=0 nodejs
+
+    # we actually already install carto using the source, this might just be not needed, but lets keep node but skip carto from npm package
+    # npm install -g carto
+}
+
+function load_osm_data {
+    # the data should be present in /usr/loca/src/grb workdir
+    # since we use a good fat machine with 4 processeors, lets use 3 for osm2pgsql and keep one for the database
+
+    osm2pgsql --create --slim -C 2500 --number-processes 3 -S /usr/local/src/openstreetmap-carto/openstreetmap-carto-orig.style --multi-geometry /usr/local/src/grb/belgium-latest.osm.pbf
+
 }
 
 function process_source_data {
@@ -492,6 +517,8 @@ if [ "${RES_ARRAY[1]}" = "db" ]; then
    create_bash_alias
    prepare_source_data
    install_tools
+   install_tile_tools
+   load_osm_data 
    process_source_data
 fi
 
