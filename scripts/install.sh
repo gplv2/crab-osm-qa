@@ -129,6 +129,7 @@ function prepare_source_data {
     echo "extracting CRAB data"
     # unpacking
     su - ${DEPLOY_USER} -c "cd /usr/local/src/grb && unzip CRAB_Adressenlijst.zip -d CRAB"
+    # creates Shapefile/CrabAdr.shp
 
     # download wegenregister data from ... aiv
     su - ${DEPLOY_USER} -c "cd /usr/local/src/grb && wget --quiet https://downloadagiv.blob.core.windows.net/wegenregister/Wegenregister_SHAPE_20170921.zip"
@@ -136,10 +137,6 @@ function prepare_source_data {
     # download belgian OSM PBF - see http://download.geofabrik.de/europe/belgium.html
     su - ${DEPLOY_USER} -c "cd /usr/local/src/grb && wget --quiet http://download.geofabrik.de/europe/belgium-latest.osm.pbf"
 
-    echo "extracting CRAB data"
-    # unpacking
-    su - ${DEPLOY_USER} -c "cd /usr/local/src/grb && unzip CRAB_Adressenlijst.zip -d CRAB"
-    # creates Shapefile/CrabAdr.shp
 
     echo "extracting WR data"
     # unpacking
