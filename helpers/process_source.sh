@@ -23,7 +23,7 @@ echo "0" > ogr2osm.id
 
 # First we need all the source data, it's hard to download these automaticall from the source place, so where needed we will use some of our own storage to download the files to so we can curl them.
 
-for file in WR/Shapefile/*.shp CRAB/Shapefile/*.shp 
+for file in WR/Wegenregister_SHAPE_20170921/Shapefile/Wegsegment.shp CRAB/Shapefile/*.shp 
 
 do
  echo "Processing $file"
