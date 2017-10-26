@@ -136,13 +136,15 @@ function prepare_source_data {
     # download wegenregister data from ... aiv
     su - ${DEPLOY_USER} -c "cd /usr/local/src/grb && wget --quiet https://downloadagiv.blob.core.windows.net/wegenregister/Wegenregister_SHAPE_20170921.zip"
 
+
     # download belgian OSM PBF - see http://download.geofabrik.de/europe/belgium.html
     su - ${DEPLOY_USER} -c "cd /usr/local/src/grb && wget --quiet http://download.geofabrik.de/europe/belgium-latest.osm.pbf"
 
 
-    echo "extracting WR data"
     # unpacking
-    su - ${DEPLOY_USER} -c "cd /usr/local/src/grb && unzip Wegenregister_SHAPE_20170921.zip -d WR"
+    echo "extracting WR data"
+    # since this zip file has an error in it, it will exit with 1 status and stop terraform processing, we need to force a good exit status
+    su - ${DEPLOY_USER} -c "cd /usr/local/src/grb && unzip Wegenregister_SHAPE_20170921.zip -d WR || exit 0"
     echo "Done"
 }
 
