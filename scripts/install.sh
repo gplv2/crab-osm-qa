@@ -144,7 +144,7 @@ function prepare_source_data {
     # unpacking
     echo "extracting WR data"
     # since this zip file has an error in it, it will exit with 1 status and stop terraform processing, we need to force a good exit status
-    su - ${DEPLOY_USER} -c "cd /usr/local/src/grb && unzip Wegenregister_SHAPE_20170921.zip -d WR || exit 0"
+    su - ${DEPLOY_USER} -c "cd /usr/local/src/grb && unzip Wegenregister_SHAPE_20170921.zip -d WR || true"
     echo "Done"
 }
 
