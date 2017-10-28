@@ -52,8 +52,8 @@ do
  echo "OGR2OSM"
  echo "======="
  rm -f "${filename}.osm"
- echo /usr/local/bin/ogr2osm/ogr2osm.py --idfile=ogr2osm.id --positive-id --saveid=ogr2osm.id "${filename}_parsed/${filename}.shp"
- /usr/local/bin/ogr2osm/ogr2osm.py --idfile=ogr2osm.id --positive-id --saveid=ogr2osm.id "${filename}_parsed/${filename}.shp"
+ echo /usr/local/bin/ogr2osm/ogr2osm.py --encoding=latin1 --idfile=ogr2osm.id --positive-id --saveid=ogr2osm.id "${filename}_parsed/${filename}.shp"
+ /usr/local/bin/ogr2osm/ogr2osm.py --encoding=latin1 --idfile=ogr2osm.id --positive-id --saveid=ogr2osm.id "${filename}_parsed/${filename}.shp"
  echo ""
 
 done
