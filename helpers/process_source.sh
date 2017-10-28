@@ -58,6 +58,12 @@ do
 
 done
 
+echo "OSM convert as we seem to be missing version information after ogr2osm"  
+# --emulate-osmosis option ?
+# --out-statistics
+osmconvert Wegsegment.osm --fake-author --out-statistics -o=WR.osm
+osmconvert CrabAdr.osm --fake-author --out-statistics -o=CRAB.osm
+
 echo "OSMOSIS MERGE"
 echo "============="
 
