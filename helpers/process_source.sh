@@ -58,34 +58,37 @@ do
  /usr/local/bin/ogr2osm/ogr2osm.py --encoding=latin1 --idfile=ogr2osm.id --positive-id --saveid=ogr2osm.id "${filename}_parsed/${filename}.shp"
  echo ""
 
-done
-
-echo "OSM convert as we seem to be missing version information after ogr2osm according to osmosis"
+# echo "OSM convert as we seem to be missing version information after ogr2osm according to osmosis"
+ echo "\n"
+ echo "OSMCONVERT"
+ echo "=========="
+ echo "statistics:"
+ /usr/bin/osmconvert ${filename}.osm --out-statistics
+ echo "converting to compatible format for OSM:"
+ /usr/bin/osmconvert ${filename}.osm --fake-author --out-statistics -o=${filename}_converted.osm
+ echo ""
 # --emulate-osmosis option ?
 # --out-statistics
-osmconvert Wegsegment.osm --fake-author --out-statistics -o=WR.osm
-osmconvert WR.osm --out-statistics
-osmconvert CrabAdr.osm --fake-author --out-statistics -o=CRAB.osm
-osmconvert CRAB.osm --out-statistics
+done
 
 echo "OSMOSIS MERGE"
 echo "============="
 
 osmosis  \
---rx WR.osm  \
---rx CRAB.osm  \
+--rx CrabAdr_converted.osm  \
+--rx Wegsegment_converted.osm  \
 --merge  \
 --wx /datadisk2/out/all_merged.osm
 
 # postgresql work
 
  echo ""
- echo "IMPORT"
- echo "======"
+ echo "IMPORT the merged file:"
+ echo "======================="
 
-/usr/bin/osm2pgsql --slim --create --cache 4000 --number-processes 3 --hstore --prefix belgium_osm --style /usr/local/src/openstreetmap-carto/openstreetmap-carto.style --multi-geometry -d grb_api -U grb-data /datadisk2/out/all_merged.osm -H grb-db-0
+/usr/bin/osm2pgsql --slim --create --cache 4000 --number-processes 4 --hstore --prefix belgium_osm --style /usr/local/src/openstreetmap-carto/openstreetmap-carto.style --multi-geometry -d grb_api -U grb-data /datadisk2/out/all_merged.osm -H grb-db-0
 
-echo "creating additional indexes..."
+echo "Creating additional indexes..."
 
 #echo 'CREATE INDEX belgium_osm_source_index_p ON belgium_osm_polygon USING btree ("source:geometry:oidn" COLLATE pg_catalog."default");' | psql -U grb-data grb_api -h grb-db-0
 #echo 'CREATE INDEX belgium_osm_source_ent_p ON belgium_osm_polygon USING btree ("source:geometry:entity" COLLATE pg_catalog."default");' | psql -U grb-data grb_api -h grb-db-0
