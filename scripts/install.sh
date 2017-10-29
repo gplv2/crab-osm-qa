@@ -96,7 +96,7 @@ function load_osm_data {
     # the data should be present in /usr/loca/src/grb workdir
     # since we use a good fat machine with 4 processeors, lets use 3 for osm2pgsql and keep one for the database
 
-    /usr/bin/osm2pgsql --slim --create --cache 4000 --number-processes 3 --hstore --prefix --style /usr/local/src/openstreetmap-carto/openstreetmap-carto-orig.style --multi-geometry -d grb_api -U grb-data -H grb-db-0 /usr/local/src/grb/belgium-latest.osm.pbf
+    /usr/bin/osm2pgsql --slim --create --cache 4000 --number-processes 3 --hstore --style /usr/local/src/openstreetmap-carto/openstreetmap-carto-orig.style --multi-geometry -d grb_api -U grb-data /usr/local/src/grb/belgium-latest.osm.pbf  -H grb-db-0
 
 }
 
