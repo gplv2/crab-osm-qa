@@ -45,7 +45,6 @@ do
  echo "OGR2OGR"
  echo "======="
  echo /usr/local/bin/ogr2ogr -s_srs "EPSG:31370" -t_srs "EPSG:4326" "${filename}_parsed" ${dirname}/${filename}.shp -overwrite
-
  /usr/local/bin/ogr2ogr -s_srs "EPSG:31370" -t_srs "EPSG:4326" "${filename}_parsed" ${dirname}/${filename}.shp -overwrite
 
  echo "\n"
@@ -62,7 +61,9 @@ echo "OSM convert as we seem to be missing version information after ogr2osm acc
 # --emulate-osmosis option ?
 # --out-statistics
 osmconvert Wegsegment.osm --fake-author --out-statistics -o=WR.osm
+osmconvert WR.osm --out-statistics
 osmconvert CrabAdr.osm --fake-author --out-statistics -o=CRAB.osm
+osmconvert CRAB.osm --out-statistics
 
 echo "OSMOSIS MERGE"
 echo "============="
