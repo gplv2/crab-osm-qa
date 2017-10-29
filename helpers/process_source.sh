@@ -66,7 +66,7 @@ do
  echo "statistics:"
  /usr/bin/osmconvert ${filename}.osm --out-statistics
  echo "converting to compatible format for OSM:"
- /usr/bin/osmconvert ${filename}.osm --fake-author --out-statistics -o=${filename}_converted.osm
+ /usr/bin/osmconvert ${filename}.osm --fake-author -o=${filename}_converted.osm
  echo ""
 # --emulate-osmosis option ?
 # --out-statistics
