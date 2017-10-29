@@ -66,7 +66,8 @@ function install_tools {
     cd /usr/local/src/ && wget --quiet http://download.osgeo.org/gdal/2.2.0/gdal-2.2.0.tar.gz && tar -xzvf gdal-2.2.0.tar.gz && cd gdal-2.2.0 && ./configure && make -j 4 && make install && ldconfig
     # ogr2osm from Peter Norman (use a fork because there is a performance issue)
     #cd /usr/local/bin && git clone --recursive git://github.com/pnorman/ogr2osm.git
-    cd /usr/local/bin && git clone --recursive git@github.com:gplv2/ogr2osm.git
+    cd /usr/local/bin && git clone --recursive git://github.com/gplv2/ogr2osm.git
+
     # need to add this directory to PATH
     export PATH=$PATH:/usr/local/bin/ogr2osm
     # carto CSS for building our custom OSM DB
