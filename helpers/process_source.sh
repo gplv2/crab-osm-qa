@@ -45,7 +45,8 @@ do
  echo "OGR2OGR"
  echo "======="
  # https://confluence.qps.nl/pages/viewpage.action?pageId=29855173
- echo /usr/local/bin/ogr2ogr -s_srs "EPSG:31370" -t_srs "EPSG:4326" "${filename}_parsed" ${dirname}/${filename}.shp -overwrite
+ #echo /usr/local/bin/ogr2ogr -s_srs "EPSG:31370" -t_srs "EPSG:4326" "${filename}_parsed" ${dirname}/${filename}.shp -overwrite
+ echo /usr/local/bin/ogr2ogr -s_srs "ESRI::${dirname}/${filename}.prj" -t_srs WGS84 "${filename}_parsed" ${dirname}/${filename}.shp -overwrite
  /usr/local/bin/ogr2ogr -s_srs "ESRI::${dirname}/${filename}.prj" -t_srs WGS84 "${filename}_parsed" ${dirname}/${filename}.shp -overwrite
 
  # /usr/local/bin/ogr2ogr -s_srs "EPSG:31370" -t_srs "EPSG:4326" "${filename}_parsed" ${dirname}/${filename}.shp -overwrite
@@ -100,7 +101,7 @@ echo "Creating additional indexes..."
 
 # setup source tag for all objects imported
 # echo "UPDATE belgium_osm_polygon SET "source" = 'GRB';" | psql -U grb-data grb_api -h grb-db-0
-echo "UPDATE belgium_osm_line SET "source" = 'GRB';" | psql -U grb-data grb_api -h grb-db-0
+#echo "UPDATE belgium_osm_line SET "source" = 'GRB';" | psql -U grb-data grb_api -h grb-db-0
 
 # more indexes
 #echo 'CREATE INDEX belgium_osm_src_index_p ON belgium_osm_polygon USING btree ("source" COLLATE pg_catalog."default");' | psql -U grb-data grb_api -h grb-db-0
