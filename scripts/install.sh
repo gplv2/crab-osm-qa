@@ -521,8 +521,8 @@ if [ "${RES_ARRAY[1]}" = "db" ]; then
    prepare_source_data
    install_tools
    install_tile_tools
-   load_osm_data 
    process_source_data
+   load_osm_data 
 fi
 
 echo "Provisioning done"
