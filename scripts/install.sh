@@ -134,25 +134,28 @@ function prepare_source_data {
     # wget seems to exhibit a bug in combination with running from terraform, quiet fixes that
 
     # download CRAB data from ... aiv
+    echo "Download CRAB data"
     su - ${DEPLOY_USER} -c "cd /usr/local/src/grb && wget --quiet https://downloadagiv.blob.core.windows.net/crab-adressenlijst/Shapefile/CRAB_Adressenlijst.zip"
+
     echo "extracting CRAB data"
     # unpacking
     su - ${DEPLOY_USER} -c "cd /usr/local/src/grb && unzip CRAB_Adressenlijst.zip -d CRAB"
     # creates Shapefile/CrabAdr.shp
 
+    echo "Download WR data"
     # download wegenregister data from ... aiv
     su - ${DEPLOY_USER} -c "cd /usr/local/src/grb && wget --quiet https://downloadagiv.blob.core.windows.net/wegenregister/Wegenregister_SHAPE_20170921.zip"
-
-
-    # download belgian OSM PBF - see http://download.geofabrik.de/europe/belgium.html
-    su - ${DEPLOY_USER} -c "cd /usr/local/src/grb && wget --quiet http://download.geofabrik.de/europe/belgium-latest.osm.pbf"
-
 
     # unpacking
     echo "extracting WR data"
     # since this zip file has an error in it, it will exit with 1 status and stop terraform processing, we need to force a good exit status
     su - ${DEPLOY_USER} -c "cd /usr/local/src/grb && unzip Wegenregister_SHAPE_20170921.zip -d WR || true"
-    echo "Done"
+
+    echo "Download OSM BE/PBF"
+    # download belgian OSM PBF - see http://download.geofabrik.de/europe/belgium.html
+    su - ${DEPLOY_USER} -c "cd /usr/local/src/grb && wget --quiet http://download.geofabrik.de/europe/belgium-latest.osm.pbf"
+
+    echo "Done preparing sources"
 }
 
 # Create an aliases file so we can use short commands to navigate a project
