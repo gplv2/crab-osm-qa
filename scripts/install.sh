@@ -62,8 +62,14 @@ locale-gen
 # Functions
 function install_tools {
     echo "Going to install our toolbox.."
+    echo "Building GDAL"
     # we gonna need a few tools , start with GDAL (for ogr)
     cd /usr/local/src/ && wget --quiet http://download.osgeo.org/gdal/2.2.0/gdal-2.2.0.tar.gz && tar -xzvf gdal-2.2.0.tar.gz && cd gdal-2.2.0 && ./configure && make -j 6 && make install && ldconfig
+
+    echo "Building osm2pgsql"
+    cd /usr/local/src/ && git clone --recursive git://github.com/openstreetmap/osm2pgsql.git && cd /usr/local/src/osm2pgsql && mkdir build && cd build && cmake .. && make -j 6 && make install
+
+#.configure && make -j 6 && make install && ldconfig
 
     # ogr2osm from Peter Norman (use a fork because there is a performance issue)
     #cd /usr/local/bin && git clone --recursive git://github.com/pnorman/ogr2osm.git
@@ -98,7 +104,7 @@ function install_tile_tools {
 function load_osm_data {
     # the data should be present in /usr/loca/src/grb workdir
     # since we use a good fat machine with 4 processeors, lets use 3 for osm2pgsql and keep one for the database
-    /usr/bin/osm2pgsql --slim --create --cache 4000 --number-processes 3 --hstore --style /usr/local/src/openstreetmap-carto/openstreetmap-carto-orig.style --multi-geometry -d grb_api -U grb-data /usr/local/src/grb/belgium-latest.osm.pbf  -H grb-db-0
+    /usr/local/bin/osm2pgsql --slim --create --cache 8000 --number-processes 3 --hstore --style /usr/local/src/openstreetmap-carto/openstreetmap-carto-orig.style --multi-geometry -d grb_api -U grb-data /usr/local/src/grb/belgium-latest.osm.pbf  -H grb-db-0
 }
 
 function process_source_data {
@@ -250,7 +256,7 @@ fi
 if [ "${RES_ARRAY[1]}" = "db" ]; then
     if [ "$DISTRIB_RELEASE" = "16.04" ]; then
         echo "Install $DISTRIB_RELEASE packages ..."
-        DEBIAN_FRONTEND=noninteractive apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confnew" -o Dpkg::Use-Pty=0 pkg-config pkgconf g++ make memcached libmemcached-dev build-essential python3-software-properties curl cmake openssl libssl-dev phpunit php7.0 php-dev php-pear pkg-config pkgconf pkg-php-tools g++ make memcached libmemcached-dev python3-software-properties php-memcached php-memcache php-cli php-mbstring cmake php-pgsql osmosis osm2pgsql
+        DEBIAN_FRONTEND=noninteractive apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confnew" -o Dpkg::Use-Pty=0 pkg-config pkgconf g++ make memcached libmemcached-dev build-essential python3-software-properties curl cmake openssl libssl-dev phpunit php7.0 php-dev php-pear pkg-config pkgconf pkg-php-tools g++ make memcached libmemcached-dev python3-software-properties php-memcached php-memcache php-cli php-mbstring cmake php-pgsql osmosis 
 
         touch /home/${DEPLOY_USER}/.hushlogin
         chown ${DEPLOY_USER}:${DEPLOY_USER} /home/${DEPLOY_USER}/.hushlogin
@@ -519,8 +525,8 @@ if [ "${RES_ARRAY[1]}" = "db" ]; then
    #install_grb_sources
    create_bash_alias
    prepare_source_data
-   install_tools
    install_tile_tools
+   install_tools
    process_source_data
    load_osm_data 
 fi
