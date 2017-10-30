@@ -46,8 +46,9 @@ do
  echo "======="
  # https://confluence.qps.nl/pages/viewpage.action?pageId=29855173
  #echo /usr/local/bin/ogr2ogr -s_srs "EPSG:31370" -t_srs "EPSG:4326" "${filename}_parsed" ${dirname}/${filename}.shp -overwrite
- echo /usr/local/bin/ogr2ogr -s_srs "ESRI::${dirname}/${filename}.prj" -t_srs WGS84 "${filename}_parsed" ${dirname}/${filename}.shp -overwrite
- /usr/local/bin/ogr2ogr -s_srs "ESRI::${dirname}/${filename}.prj" -t_srs WGS84 "${filename}_parsed" ${dirname}/${filename}.shp -overwrite
+ echo /usr/local/bin/ogr2ogr -s_srs "ESRI::${dirname}/${filename}.prj" -t_srs EPSG:900913 "${filename}_parsed" ${dirname}/${filename}.shp -overwrite
+ #/usr/local/bin/ogr2ogr -s_srs "ESRI::${dirname}/${filename}.prj" -t_srs WGS84 "${filename}_parsed" ${dirname}/${filename}.shp -overwrite
+ /usr/local/bin/ogr2ogr -s_srs "ESRI::${dirname}/${filename}.prj" -t_srs EPSG:900913 "${filename}_parsed" ${dirname}/${filename}.shp -overwrite
 
  # /usr/local/bin/ogr2ogr -s_srs "EPSG:31370" -t_srs "EPSG:4326" "${filename}_parsed" ${dirname}/${filename}.shp -overwrite
 
