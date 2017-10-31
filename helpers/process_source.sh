@@ -46,13 +46,14 @@ do
  echo "======="
  # https://confluence.qps.nl/pages/viewpage.action?pageId=29855173
  #echo /usr/local/bin/ogr2ogr -s_srs "EPSG:31370" -t_srs "EPSG:4326" "${filename}_parsed" ${dirname}/${filename}.shp -overwrite
- echo /usr/local/bin/ogr2ogr -s_srs "ESRI::${dirname}/${filename}.prj" -t_srs EPSG:900913 "${filename}_parsed" ${dirname}/${filename}.shp -overwrite
+ #echo /usr/local/bin/ogr2ogr -s_srs "ESRI::${dirname}/${filename}.prj" -t_srs EPSG:4326 "${filename}_parsed" ${dirname}/${filename}.shp -overwrite
  #/usr/local/bin/ogr2ogr -s_srs "ESRI::${dirname}/${filename}.prj" -t_srs WGS84 "${filename}_parsed" ${dirname}/${filename}.shp -overwrite
- /usr/local/bin/ogr2ogr -f "ESRI Shapefile" -t_srs EPSG:900913 "${filename}_parsed"  -s_srs "ESRI::${dirname}/${filename}.prj" "${filename}_parsed" ${dirname}/${filename}.shp -overwrite
+ echo /usr/local/bin/ogr2ogr -f "ESRI Shapefile" -t_srs EPSG:4326 -s_srs "EPSG:31370" "${filename}_parsed" ${dirname}/${filename}.shp -overwrite
+ /usr/local/bin/ogr2ogr -f "ESRI Shapefile" -t_srs EPSG:4326 -s_srs "EPSG:31370" "${filename}_parsed" ${dirname}/${filename}.shp -overwrite
 
  # /usr/local/bin/ogr2ogr -s_srs "EPSG:31370" -t_srs "EPSG:4326" "${filename}_parsed" ${dirname}/${filename}.shp -overwrite
 
- echo "\n"
+ echo ""
  echo "OGR2OSM"
  echo "======="
  rm -f "${filename}.osm"
@@ -61,13 +62,13 @@ do
  echo ""
 
 # echo "OSM convert as we seem to be missing version information after ogr2osm according to osmosis"
- echo "\n"
+ echo ""
  echo "OSMCONVERT"
  echo "=========="
- echo "statistics:"
- /usr/bin/osmconvert ${filename}.osm --out-statistics
  echo "converting to compatible format for OSM:"
  /usr/bin/osmconvert ${filename}.osm --fake-author -o=${filename}_converted.osm
+ echo "statistics:"
+ /usr/bin/osmconvert ${filename}_converted.osm --out-statistics
  echo ""
 # --emulate-osmosis option ?
 # --out-statistics
@@ -88,7 +89,7 @@ osmosis  \
  echo "IMPORT the merged file:"
  echo "======================="
 
-/usr/local/bin/osm2pgsql --slim --create --cache 4000 --number-processes 4 --hstore --prefix belgium_osm --style /usr/local/src/openstreetmap-carto/openstreetmap-carto.style --multi-geometry -d grb_api -U grb-data /datadisk2/out/all_merged.osm -H grb-db-0
+/usr/local/bin/osm2pgsql --slim --create -l --cache 4000 --number-processes 4 --hstore --prefix belgium_osm --style /usr/local/src/openstreetmap-carto/openstreetmap-carto.style --multi-geometry -d grb_api -U grb-data /datadisk2/out/all_merged.osm -H grb-db-0
 
 echo "Creating additional indexes..."
 
