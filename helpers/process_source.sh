@@ -48,7 +48,7 @@ do
  #echo /usr/local/bin/ogr2ogr -s_srs "EPSG:31370" -t_srs "EPSG:4326" "${filename}_parsed" ${dirname}/${filename}.shp -overwrite
  echo /usr/local/bin/ogr2ogr -s_srs "ESRI::${dirname}/${filename}.prj" -t_srs EPSG:900913 "${filename}_parsed" ${dirname}/${filename}.shp -overwrite
  #/usr/local/bin/ogr2ogr -s_srs "ESRI::${dirname}/${filename}.prj" -t_srs WGS84 "${filename}_parsed" ${dirname}/${filename}.shp -overwrite
- /usr/local/bin/ogr2ogr -s_srs "ESRI::${dirname}/${filename}.prj" -t_srs EPSG:900913 "${filename}_parsed" ${dirname}/${filename}.shp -overwrite
+ /usr/local/bin/ogr2ogr -f "ESRI Shapefile" -t_srs EPSG:900913 "${filename}_parsed"  -s_srs "ESRI::${dirname}/${filename}.prj" "${filename}_parsed" ${dirname}/${filename}.shp -overwrite
 
  # /usr/local/bin/ogr2ogr -s_srs "EPSG:31370" -t_srs "EPSG:4326" "${filename}_parsed" ${dirname}/${filename}.shp -overwrite
 
