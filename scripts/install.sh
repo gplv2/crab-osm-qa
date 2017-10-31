@@ -101,7 +101,7 @@ function install_tile_tools {
     # using Jonathan Belien's installation guide (used for creating the public belgian tile server for OSM.be) 
 
     # we need to prepare a partial tilesever setup so we can load belgium in a postGIS database , there might be some duplicate packages with the rest of this script
-    DEBIAN_FRONTEND=noninteractive apt-get install -qq -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confnew" -o Dpkg::Use-Pty=0 libboost-all-dev git-core tar unzip wget bzip2 build-essential autoconf libtool libgeos-dev libgeos++-dev libpq-dev libproj-dev libprotobuf-c0-dev libxml2-dev protobuf-c-compiler libfreetype6-dev libpng12-dev libtiff5-dev libicu-dev libcairo-dev libcairomm-1.0-dev apache2 apache2-dev libagg-dev liblua5.2-dev ttf-unifont liblua5.1-dev libgeotiff-epsg fonts-noto-cjk fonts-noto-hinted fonts-noto-unhinted python-yaml make cmake g++ libboost-dev libboost-system-dev libboost-filesystem-dev libexpat1-dev zlib1g-dev libbz2-dev libpq-dev liblua5.2-dev osmctools libosmium2-dev libprotozero-dev libutfcpp-dev rapidjson-dev pandoc libosmium-dev clang-tidy cppcheck iwyu
+    DEBIAN_FRONTEND=noninteractive apt-get install -qq -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confnew" -o Dpkg::Use-Pty=0 libboost-all-dev git-core tar unzip wget bzip2 build-essential autoconf libtool libgeos-dev libgeos++-dev libpq-dev libproj-dev libprotobuf-c0-dev libxml2-dev protobuf-c-compiler libfreetype6-dev libpng12-dev libtiff5-dev libicu-dev libcairo-dev libcairomm-1.0-dev apache2 apache2-dev libagg-dev liblua5.2-dev ttf-unifont liblua5.1-dev libgeotiff-epsg fonts-noto-cjk fonts-noto-hinted fonts-noto-unhinted python-yaml make cmake g++ libboost-dev libboost-system-dev libboost-filesystem-dev libexpat1-dev zlib1g-dev libbz2-dev libpq-dev liblua5.2-dev osmctools libosmium2-dev libprotozero-dev libutfcpp-dev rapidjson-dev pandoc libosmium-dev clang-tidy cppcheck iwyu recode
 
     # postgis is already present, so skip that step, but nodejs is not
     curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
@@ -360,6 +360,8 @@ if [ "${RES_ARRAY[1]}" = "db" ]; then
 cat > /tmp/install.tablespaces.sql << EOF
 CREATE TABLESPACE dbspace LOCATION '/datadisk1/pg_db';
 CREATE TABLESPACE indexspace LOCATION '/datadisk2/pg_in';
+GRANT ALL PRIVILEGES ON TABLESPACE dbspace TO "${USER}" WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON TABLESPACE indexspace TO "${USER}" WITH GRANT OPTION;
 EOF
 
     su - postgres -c "cat /tmp/install.tablespaces.sql | psql"
@@ -369,8 +371,6 @@ cat > /tmp/alter.ts.sql << EOF
 ALTER DATABASE ${DB} SET TABLESPACE dbspace;
 ALTER TABLE ALL IN TABLESPACE pg_default OWNED BY "${USER}" SET TABLESPACE dbspace;
 ALTER INDEX ALL IN TABLESPACE pg_default OWNED BY "${USER}" SET TABLESPACE indexspace;
-GRANT ALL PRIVILEGES ON TABLESPACE dbspace TO "${USER}" WITH GRANT OPTION;
-GRANT ALL PRIVILEGES ON TABLESPACE indexspace TO "${USER}" WITH GRANT OPTION;
 EOF
     su - postgres -c "cat /tmp/alter.ts.sql | psql"
 
