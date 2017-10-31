@@ -89,7 +89,7 @@ osmosis  \
  echo "IMPORT the merged file:"
  echo "======================="
 
-/usr/local/bin/osm2pgsql --slim --create -l --cache 4000 --number-processes 4 --hstore --prefix belgium_osm --style /usr/local/src/openstreetmap-carto/openstreetmap-carto.style --multi-geometry -d grb_api -U grb-data /datadisk2/out/all_merged.osm -H grb-db-0
+/usr/local/bin/osm2pgsql --slim --create -l --cache 8000 --number-processes 4 --hstore --prefix belgium_osm --style /usr/local/src/openstreetmap-carto/openstreetmap-carto.style --multi-geometry -d grb_api -U grb-data /datadisk2/out/all_merged.osm -H grb-db-0
 
 echo "Creating additional indexes..."
 

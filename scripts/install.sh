@@ -116,8 +116,9 @@ function install_tile_tools {
 function load_osm_data {
     # the data should be present in /usr/loca/src/grb workdir
     # since we use a good fat machine with 4 processeors, lets use 3 for osm2pgsql and keep one for the database
-    /usr/local/bin/osm2pgsql --slim --create --cache 8000 --number-processes 3 --hstore --style /usr/local/src/openstreetmap-carto/openstreetmap-carto-orig.style --multi-geometry -d grb_api -U grb-data /usr/local/src/grb/belgium-latest.osm.pbf  -H grb-db-0
+    /usr/local/bin/osm2pgsql --slim --create -l --cache 8000 --number-processes 4 --hstore --style /usr/local/src/openstreetmap-carto/openstreetmap-carto-orig.style --multi-geometry -d grb_api -U grb-data /usr/local/src/grb/belgium-latest.osm.pbf  -H grb-db-0
 }
+
 
 function process_source_data {
     # call external script
