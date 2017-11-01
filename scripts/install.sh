@@ -364,7 +364,6 @@ GRANT ALL PRIVILEGES ON TABLESPACE dbspace TO "${USER}" WITH GRANT OPTION;
 GRANT ALL PRIVILEGES ON TABLESPACE indexspace TO "${USER}" WITH GRANT OPTION;
 EOF
 
-    su - postgres -c "cat /tmp/install.tablespaces.sql | psql"
 
     # set default TS
 cat > /tmp/alter.ts.sql << EOF
@@ -372,7 +371,6 @@ ALTER DATABASE ${DB} SET TABLESPACE dbspace;
 ALTER TABLE ALL IN TABLESPACE pg_default OWNED BY "${USER}" SET TABLESPACE dbspace;
 ALTER INDEX ALL IN TABLESPACE pg_default OWNED BY "${USER}" SET TABLESPACE indexspace;
 EOF
-    su - postgres -c "cat /tmp/alter.ts.sql | psql"
 
     echo "Preparing Database ... $DB / $USER "
     # su postgres -c "dropdb $DB --if-exists"
@@ -389,6 +387,9 @@ EOF
           su - postgres -c "createdb --encoding='utf-8' --owner=$USER '$DATA_DB'"
        fi
     fi
+    echo "GRANT privileges on tablespaces to $USER"
+    su - postgres -c "cat /tmp/install.tablespaces.sql | psql"
+    su - postgres -c "cat /tmp/alter.ts.sql | psql"
 
     echo "Changing user password ..."
 cat > /tmp/install.postcreate.sql << EOF
