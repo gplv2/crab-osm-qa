@@ -85,6 +85,7 @@ function install_tools {
 
     # ogr2osm from Peter Norman (use a fork because there is a performance issue)
     #cd /usr/local/bin && git clone --recursive git://github.com/pnorman/ogr2osm.git
+    
     cd /usr/local/bin && git clone --recursive git://github.com/gplv2/ogr2osm.git
     # need to add this directory to PATH
     export PATH=$PATH:/usr/local/bin/ogr2osm
